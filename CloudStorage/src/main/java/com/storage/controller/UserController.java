@@ -19,7 +19,7 @@ import jakarta.validation.Valid;
 @RequestMapping("/api/")
 public class UserController {
 
-	@PostMapping("user")
+	@PostMapping("create")
 	private ResponseEntity<String> createUser (@Valid @RequestBody UserDTO userDTO){
 		
 		
@@ -41,7 +41,7 @@ public class UserController {
 		return new ResponseEntity<String>("User updated", HttpStatus.OK);
 	}
 	
-	@DeleteMapping("delete{userId}")
+	@DeleteMapping("delete/{userId}")
 	private ResponseEntity<String> deleteUser (@RequestParam Long userId){
 		
 		return new ResponseEntity<String>("User deleted", HttpStatus.OK);
