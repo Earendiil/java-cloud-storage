@@ -27,7 +27,7 @@ public class StoredFile {
 	@GeneratedValue
 	private  UUID id;
 	
-	private String originalFileName;     
+	private String fileName;     
     private String storedFileName;       // Renamed unique filename (on disk or S3)
     private String contentType;          // image/png, application/pdf etc.
     private Long size;                   // in bytes

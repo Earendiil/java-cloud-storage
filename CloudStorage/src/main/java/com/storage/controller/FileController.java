@@ -1,0 +1,55 @@
+package com.storage.controller;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.storage.dto.StoredFileDTO;
+
+@RestController
+@RequestMapping("/api/")
+public class FileController {
+
+	@PostMapping("user/files/{userId}")
+	private ResponseEntity<String> saveFile(@PathVariable Long userId, @RequestBody StoredFileDTO fileDTO){
+		
+		
+		return new ResponseEntity<String>("File saved", HttpStatus.OK);
+	}
+	
+	@GetMapping("user/files/{userId}")
+	private ResponseEntity<List<StoredFileDTO>> getFiles(@PathVariable Long userId){
+		List<StoredFileDTO> files = new ArrayList<>();
+		
+		return new ResponseEntity<List<StoredFileDTO>>(files, HttpStatus.OK); 
+	}
+	
+	@DeleteMapping("user/files/{userId}/{fileId}")
+	private ResponseEntity<Void> deleteFile(@PathVariable Long userId,
+											@PathVariable UUID fileId){
+		
+//		 boolean deleted = fileService.deleteFile(userId, fileId);
+//
+//		    if (deleted) {
+//		        return ResponseEntity.noContent().build(); // HTTP 204 No Content
+//		    } else {
+//		        return ResponseEntity.notFound().build();  // HTTP 404 Not Found
+//		    }
+//												
+		return null;
+		
+		
+	}
+	
+	
+}
