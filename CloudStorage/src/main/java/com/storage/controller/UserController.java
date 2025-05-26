@@ -12,26 +12,33 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.storage.dto.UserDTO;
+import com.storage.service.UserService;
 
 import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/")
 public class UserController {
+	
+	private final UserService userService;
+	
 
+	public UserController(UserService userService) {
+		super();
+		this.userService = userService;
+	}
+
+	
 	@PostMapping("create")
 	private ResponseEntity<String> createUser (@Valid @RequestBody UserDTO userDTO){
-		
-		
-		return new ResponseEntity<String>("User created", HttpStatus.OK);
+		userService.saveUser(userDTO);
+		return new ResponseEntity<String>("User created", HttpStatus.CREATED);
 	}
 	
 	@GetMapping("user/{userId}")
 	private ResponseEntity<UserDTO> getUser (@RequestParam Long userId){
-		UserDTO userDTO = new UserDTO();
-		
-		
-		return new ResponseEntity<UserDTO>(userDTO, HttpStatus.OK);
+		UserDTO user = userService.findUser(userId);		
+		return new ResponseEntity<UserDTO>(user, HttpStatus.OK);
 	}
 	
 	
