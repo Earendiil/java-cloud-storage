@@ -21,9 +21,9 @@ public class SignupRequest {
 	@Email(message = "invalid email format")
 	private String email;
 	
-	@JsonIgnore
+	
 	@Column(nullable = false) // enforces non-null in the DB schema too
-	@NotBlank(message = "password required")
+	@NotBlank(message = "password is required")
 	@Size(min = 8, max = 72)
 	@Pattern(regexp = ".*[a-zA-Z].*", message = "Must contain at least one alphabetical letter")
 	private String password;
