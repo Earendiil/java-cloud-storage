@@ -11,13 +11,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.storage.dto.SignupRequest;
 import com.storage.dto.UserDTO;
 import com.storage.service.UserService;
 
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/api/")
+@RequestMapping("/api")
 public class UserController {
 	
 	private final UserService userService;
@@ -30,8 +31,8 @@ public class UserController {
 
 	
 	@PostMapping("create")
-	private ResponseEntity<String> createUser (@Valid @RequestBody UserDTO userDTO){
-		userService.saveUser(userDTO);
+	private ResponseEntity<String> createUser (@Valid @RequestBody SignupRequest signupRequest){
+		userService.saveUser(signupRequest);
 		return new ResponseEntity<String>("User created", HttpStatus.CREATED);
 	}
 	

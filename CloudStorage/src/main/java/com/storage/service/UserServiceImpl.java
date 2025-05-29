@@ -4,6 +4,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.boot.context.config.ConfigDataResourceNotFoundException;
 import org.springframework.stereotype.Service;
 
+import com.storage.dto.SignupRequest;
 import com.storage.dto.UserDTO;
 import com.storage.entity.User;
 import com.storage.repository.UserRepository;
@@ -23,12 +24,12 @@ public class UserServiceImpl implements UserService {
 
 
 	@Override
-	public void saveUser(@Valid UserDTO userDTO) {
-		if( userRepository.existsByEmail(userDTO.getEmail())) {
+	public void saveUser(@Valid SignupRequest signupRequest) {
+		if( userRepository.existsByEmail(signupRequest.getEmail())) {
 			throw new IllegalArgumentException("Email already exists");
 		}
-		User user = modelMapper.map(userDTO, User.class);
-		user.setPassword(userDTO.getPassword());
+		User user = modelMapper.map(signupRequest, User.class);
+		user.setPassword(signupRequest.getPassword());
 		userRepository.save(user);
 	}
 
