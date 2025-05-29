@@ -10,6 +10,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -31,9 +32,10 @@ public class StoredFile {
     private String storedFileName;       // Renamed unique filename (on disk or S3)
     private String contentType;          // image/png, application/pdf etc.
     private Long size;                   // in bytes
-    private String storagePath;          // relative or full path (optional)
     private Instant uploadDate;
-
+    @Lob
+    private byte[] data;
+    
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     @JsonIgnore

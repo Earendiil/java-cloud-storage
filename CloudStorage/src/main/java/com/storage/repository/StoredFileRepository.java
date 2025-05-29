@@ -8,4 +8,6 @@ import com.storage.entity.StoredFile;
 
 public interface StoredFileRepository extends JpaRepository<StoredFile, UUID> {
 
+
+
 }

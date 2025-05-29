@@ -3,6 +3,7 @@ package com.storage.dto;
 import java.time.Instant;
 import java.util.UUID;
 
+import jakarta.persistence.Lob;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,6 +18,7 @@ public class StoredFileDTO {
     private String contentType;          
     private Long size;                   
     private Instant uploadDate;
-    
+    @Lob
+    private byte[] data;
     
 }
