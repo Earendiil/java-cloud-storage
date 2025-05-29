@@ -3,8 +3,10 @@ package com.storage.service;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -70,6 +72,19 @@ public class StoredFileServiceImpl implements StoredFileService{
 	            file.getData()
 	        ))
 	        .collect(Collectors.toList());
+	}
+
+	@Override
+	public void removeFile(Long userId, UUID fileId) {
+		// can swap to retrieving the user from authantication w/o passing the userId
+	
+	 StoredFile file = fileRepository.findById(fileId)
+			 .orElseThrow(() -> new ResourceNotFoundException("File not found"));
+	 if (!file.getOwner().getUserId().equals(userId)) 
+		    throw new AccessDeniedException("You are not allowed to delete this file.");
+		
+	 fileRepository.delete(file);
+		
 	}
 
 

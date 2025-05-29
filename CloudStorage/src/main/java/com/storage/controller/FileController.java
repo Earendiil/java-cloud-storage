@@ -51,18 +51,11 @@ public class FileController {
 	}
 	
 	@DeleteMapping("user/files/{userId}/{fileId}")
-	private ResponseEntity<Void> deleteFile(@PathVariable Long userId,
-											@PathVariable UUID fileId){
-		
-//		 boolean deleted = fileService.deleteFile(userId, fileId);
-//
-//		    if (deleted) {
-//		        return ResponseEntity.noContent().build(); // HTTP 204 No Content
-//		    } else {
-//		        return ResponseEntity.notFound().build();  // HTTP 404 Not Found
-//		    }
-//												
-		return null;
+	private ResponseEntity<String> deleteFile(@PathVariable Long userId,
+											  @PathVariable UUID fileId){
+		fileService.removeFile(userId, fileId);
+										
+		return new ResponseEntity<String>("File deleted!", HttpStatus.OK);
 		
 		
 	}
