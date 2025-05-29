@@ -4,13 +4,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.storage.dto.ChangePasswordRequest;
 import com.storage.dto.SignupRequest;
 import com.storage.dto.UserDTO;
 import com.storage.service.UserService;
@@ -37,20 +38,20 @@ public class UserController {
 	}
 	
 	@GetMapping("user/{userId}")
-	private ResponseEntity<UserDTO> getUser (@RequestParam Long userId){
+	private ResponseEntity<UserDTO> getUser (@PathVariable Long userId){
 		UserDTO user = userService.findUser(userId);		
 		return new ResponseEntity<UserDTO>(user, HttpStatus.OK);
 	}
 	
 	
 	@PutMapping("user/{userId}")
-	private ResponseEntity<String> updateUser (@Valid @RequestParam Long userId, @RequestBody UserDTO userDTO){
-		
+	private ResponseEntity<String> changePassword (@Valid @PathVariable Long userId, @RequestBody ChangePasswordRequest changePasswordRequest){
+		UserDTO user = userService.editPassword(userId, changePasswordRequest);
 		return new ResponseEntity<String>("User updated", HttpStatus.OK);
 	}
 	
 	@DeleteMapping("delete/{userId}")
-	private ResponseEntity<String> deleteUser (@RequestParam Long userId){
+	private ResponseEntity<String> deleteUser (@PathVariable Long userId){
 		
 		return new ResponseEntity<String>("User deleted", HttpStatus.OK);
 	}

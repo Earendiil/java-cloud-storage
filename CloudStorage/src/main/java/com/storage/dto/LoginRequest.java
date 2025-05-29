@@ -1,7 +1,5 @@
 package com.storage.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import jakarta.persistence.Column;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -21,7 +19,7 @@ public class LoginRequest {
 	@Email(message = "invalid email format")
 	private String email;
 	
-	@JsonIgnore
+	
 	@Column(nullable = false) // enforces non-null in the DB schema too
 	@NotBlank(message = "password is required")
 	@Size(min = 8, max = 72)
