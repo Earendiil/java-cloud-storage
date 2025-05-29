@@ -44,11 +44,9 @@ public class FileController {
 	
 	
 	
-	
 	@GetMapping("user/files/{userId}")
-	private ResponseEntity<List<StoredFileDTO>> getFiles(@PathVariable Long userId){
-		List<StoredFileDTO> files = new ArrayList<>();
-		
+	private ResponseEntity<List<StoredFileDTO>> getUserFiles(@PathVariable Long userId){
+		List<StoredFileDTO> files = fileService.getAllFiles(userId);
 		return new ResponseEntity<List<StoredFileDTO>>(files, HttpStatus.OK); 
 	}
 	

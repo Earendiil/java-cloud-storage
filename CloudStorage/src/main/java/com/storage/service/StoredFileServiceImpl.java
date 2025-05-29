@@ -2,10 +2,13 @@ package com.storage.service;
 
 import java.io.IOException;
 import java.time.Instant;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.storage.dto.StoredFileDTO;
 import com.storage.entity.StoredFile;
 import com.storage.entity.User;
 import com.storage.exceptions.ResourceNotFoundException;
@@ -49,5 +52,25 @@ public class StoredFileServiceImpl implements StoredFileService{
         }
         return java.util.UUID.randomUUID().toString() + extension;
 	}
+
+	@Override
+	public List<StoredFileDTO> getAllFiles(Long userId) {
+	    User user = userRepository.findById(userId)
+	        .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+	    List<StoredFile> files = fileRepository.findAllByOwner(user);
+
+	    return files.stream()
+	        .map(file -> new StoredFileDTO(
+	            file.getId(),
+	            file.getFileName(),
+	            file.getContentType(),
+	            file.getSize(),
+	            file.getUploadDate(),
+	            file.getData()
+	        ))
+	        .collect(Collectors.toList());
+	}
+
 
 }
