@@ -34,7 +34,7 @@ public class UserController {
 	@PostMapping("create")
 	private ResponseEntity<String> createUser (@Valid @RequestBody SignupRequest signupRequest){
 		userService.saveUser(signupRequest);
-		return new ResponseEntity<String>("User created", HttpStatus.CREATED);
+		return new ResponseEntity<String>("User created!", HttpStatus.CREATED);
 	}
 	
 	@GetMapping("user/{userId}")
@@ -46,14 +46,14 @@ public class UserController {
 	
 	@PutMapping("user/{userId}")
 	private ResponseEntity<String> changePassword (@Valid @PathVariable Long userId, @RequestBody ChangePasswordRequest changePasswordRequest){
-		UserDTO user = userService.editPassword(userId, changePasswordRequest);
-		return new ResponseEntity<String>("User updated", HttpStatus.OK);
+		userService.editPassword(userId, changePasswordRequest);
+		return new ResponseEntity<String>("Password updated!", HttpStatus.OK);
 	}
 	
 	@DeleteMapping("delete/{userId}")
 	private ResponseEntity<String> deleteUser (@PathVariable Long userId){
-		
-		return new ResponseEntity<String>("User deleted", HttpStatus.OK);
+		userService.removeUser(userId);
+		return new ResponseEntity<String>("User deleted!", HttpStatus.OK);
 	}
 	
 	

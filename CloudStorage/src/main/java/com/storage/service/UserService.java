@@ -12,6 +12,8 @@ public interface UserService {
 
 	UserDTO findUser(Long userId);
 
-	UserDTO editPassword(@Valid Long userId, ChangePasswordRequest changePasswordRequest);
+	void editPassword(@Valid Long userId, ChangePasswordRequest changePasswordRequest);
+
+	void removeUser(Long userId);
 
 }

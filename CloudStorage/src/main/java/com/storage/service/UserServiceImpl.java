@@ -21,10 +21,10 @@ public class UserServiceImpl implements UserService {
 	private final ModelMapper modelMapper;
 	private final PasswordEncoder passwordEncoder;
 	
-	public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+	public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, ModelMapper modelMapper) {
 		super();
 		this.userRepository = userRepository;
-		this.modelMapper = new ModelMapper();
+		this.modelMapper = modelMapper;
 		this.passwordEncoder = passwordEncoder;
 	}
 
@@ -34,12 +34,9 @@ public class UserServiceImpl implements UserService {
 	    if (userRepository.existsByEmail(signupRequest.getEmail())) {
 	        throw new IllegalArgumentException("Email already exists");
 	    }
-
 	    if (!signupRequest.getPassword().equals(signupRequest.getConfirmPassword())) {
 	    	throw new PasswordMismatchException("Passwords do not match");
-
 	    }
-
 	    User user = modelMapper.map(signupRequest, User.class);
 	    user.setPassword(passwordEncoder.encode(signupRequest.getPassword()));
 	    userRepository.save(user);
@@ -49,17 +46,35 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public UserDTO findUser(Long userId) {
-		User user = userRepository.findById(userId).orElseThrow(() -> new ConfigDataResourceNotFoundException(null));
+		User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User not found!"));
 		return modelMapper.map(user, UserDTO.class);
 	}
 
 
 	@Override
-	public UserDTO editPassword(@Valid Long userId, ChangePasswordRequest changePasswordRequest) {
-		User user =	userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("user not found"));
+	public void editPassword(Long userId, ChangePasswordRequest changePasswordRequest) {
+		User user =	userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User not found!"));
 		
-		user.setPassword(changePasswordRequest.getNewPassword());
-		return null;
+		if (!passwordEncoder.matches(changePasswordRequest.getOldPassword(), user.getPassword())) {
+		    throw new PasswordMismatchException("Current password is incorrect!");
+		}
+		if (!changePasswordRequest.getNewPassword().equals(changePasswordRequest.getConfirmPassword())) {
+			throw new PasswordMismatchException("Passwords do not match");
+		}
+		
+		user.setPassword(passwordEncoder.encode(changePasswordRequest.getNewPassword()));
+	    userRepository.save(user);
+
+	   
+	}
+
+
+	@Override
+	public void removeUser(Long userId) {
+		if (!userRepository.existsById(userId)) {
+			throw new ResourceNotFoundException("User doesn't exist!");
+		}
+		userRepository.deleteById(userId);
 	}
 
 }
