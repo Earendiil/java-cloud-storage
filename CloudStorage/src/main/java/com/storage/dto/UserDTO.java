@@ -17,6 +17,7 @@ public class UserDTO {
 	
 	private Long userId;
 	private String email;
+	private String username;
 	private List <StoredFile> files;
 	
 	

@@ -19,6 +19,10 @@ public class SignupRequest {
 	@Email(message = "invalid email format")
 	private String email;
 	
+	@NotBlank
+	@Size(min = 5, max = 15, message = "username must be within 5-15 characters")
+	private String username;
+	
 	//@JsonIgnore We can't use that here
 	@Column(nullable = false) // enforces non-null in the DB schema too
 	@NotBlank(message = "password is required")

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.storage.dto.LoginRequest;
 import com.storage.dto.LoginResponse;
+import com.storage.dto.SignupRequest;
 import com.storage.security.CustomUserDetailsService;
 import com.storage.security.JwtUtils;
 
@@ -43,4 +44,11 @@ public class AuthController {
         String token = jwtUtils.generateToken(request.getInput());
         return ResponseEntity.ok(new LoginResponse(token));
     }
+	
+
+		
+		
+		
+	
+	
 }
