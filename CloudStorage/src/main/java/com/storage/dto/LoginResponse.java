@@ -1,9 +1,18 @@
 package com.storage.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class LoginResponse {
     private String token;
+    private Long id;
+    private String username;
+    private String email;
 
-    public LoginResponse(String token) { this.token = token; }
-
-    public String getToken() { return token; }
+   
 }
+
