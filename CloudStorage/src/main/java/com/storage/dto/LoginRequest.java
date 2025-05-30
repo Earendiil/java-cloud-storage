@@ -1,10 +1,5 @@
 package com.storage.dto;
 
-import jakarta.persistence.Column;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,15 +9,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class LoginRequest {
 
-	@Column(unique = true, nullable = false)
-	@NotBlank (message = "email is required")
-	@Email(message = "invalid email format")
-	private String email;
 	
+	    private String input;     // email or username
+	    private String password;
 	
-	@Column(nullable = false) // enforces non-null in the DB schema too
-	@NotBlank(message = "password is required")
-	@Size(min = 8, max = 72)
-	@Pattern(regexp = ".*[a-zA-Z].*", message = "Must contain at least one alphabetical letter")
-	private String password;
 }

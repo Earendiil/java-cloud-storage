@@ -31,6 +31,9 @@ public class User {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long userId;
 	
+	//handle logic later
+	private String username;
+	
 	@Column(unique = true, nullable = false)
 	@NotBlank (message = "email is required")
 	@Email(message = "invalid email format")
