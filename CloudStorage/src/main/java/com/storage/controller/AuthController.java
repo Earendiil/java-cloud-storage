@@ -1,5 +1,6 @@
 package com.storage.controller;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -40,7 +41,7 @@ public class AuthController {
 
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest request) {
+    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
         Authentication auth = authManager.authenticate(
             new UsernamePasswordAuthenticationToken(request.getInput(), request.getPassword())
         );
@@ -55,7 +56,9 @@ public class AuthController {
         );
     }
 
-	
+
+    /*   @PostMapping("/logout") will be handled by Frontend */
+    
 
 		
 		
