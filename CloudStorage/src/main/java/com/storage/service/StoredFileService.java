@@ -7,6 +7,7 @@ import java.util.UUID;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.storage.dto.StoredFileDTO;
+import com.storage.entity.StoredFile;
 
 public interface StoredFileService {
 
@@ -15,5 +16,7 @@ public interface StoredFileService {
 	List<StoredFileDTO> getAllFiles(Long userId);
 
 	void removeFile(Long userId, UUID fileId);
+
+	StoredFile getFileById(UUID fileId);
 
 }

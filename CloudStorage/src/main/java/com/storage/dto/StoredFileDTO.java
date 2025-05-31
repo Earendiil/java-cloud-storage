@@ -13,12 +13,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class StoredFileDTO {
 
-	private UUID id;
-	private String originalFileName;     
-    private String contentType;          
-    private Long size;                   
+    private UUID fileId;
+    private String fileName;         // original file name
+    private String contentType;
+    private Long size;
     private Instant uploadDate;
-    @Lob
-    private byte[] data;
+
+   
+//    private byte[] data;   
     
 }

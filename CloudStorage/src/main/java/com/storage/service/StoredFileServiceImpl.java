@@ -64,12 +64,11 @@ public class StoredFileServiceImpl implements StoredFileService{
 
 	    return files.stream()
 	        .map(file -> new StoredFileDTO(
-	            file.getId(),
+	            file.getFileId(),
 	            file.getFileName(),
 	            file.getContentType(),
 	            file.getSize(),
-	            file.getUploadDate(),
-	            file.getData()
+	            file.getUploadDate()
 	        ))
 	        .collect(Collectors.toList());
 	}
@@ -86,6 +85,13 @@ public class StoredFileServiceImpl implements StoredFileService{
 	 fileRepository.delete(file);
 		
 	}
+
+	@Override
+	public StoredFile getFileById(UUID fileId) {
+		return fileRepository.findById(fileId).orElseThrow(()-> new ResourceNotFoundException("file not found"));
+		
+	}
+
 
 
 }
