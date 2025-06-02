@@ -26,7 +26,7 @@ import com.storage.repository.StoredFileRepository;
 import com.storage.service.StoredFileService;
 
 @RestController
-@RequestMapping("/api/")
+@RequestMapping("/api")
 public class FileController {
 	
 	private final StoredFileService fileService;
