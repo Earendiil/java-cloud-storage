@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
-public class MyGlobalExceptionHandler {
+public class GlobalExceptionHandler {
 
 
     // Handle validation errors on request params or path variables
@@ -53,7 +53,10 @@ public class MyGlobalExceptionHandler {
     }
 
     @ExceptionHandler(PasswordMismatchException.class)
-    public ResponseEntity<Map<String, String>> handlePasswordMismatch(PasswordMismatchException ex) {
-        return ResponseEntity.badRequest().body(Map.of("message", ex.getMessage()));
+    public ResponseEntity<Map<String, Map<String, String>>> handlePasswordMismatch(PasswordMismatchException ex) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("confirmPassword", ex.getMessage()); 
+        return ResponseEntity.badRequest().body(Map.of("errors", errors));
     }
+
 }
