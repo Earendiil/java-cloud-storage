@@ -1,5 +1,7 @@
 package com.storage.dto;
 
+import com.storage.validation.PasswordMatches;
+
 import jakarta.persistence.Column;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -12,6 +14,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@PasswordMatches
 public class SignupRequest {
 
 	@Column(unique = true, nullable = false)

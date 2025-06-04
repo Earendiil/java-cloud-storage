@@ -31,10 +31,18 @@ public class JwtFilter extends OncePerRequestFilter {
 
 
 
-	@Override
+    @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain chain) throws ServletException, IOException {
+
+        String path = request.getServletPath();
+
+        // Skip JWT filter for public endpoints like /auth/** or /api/** if you want those public
+        if (path.startsWith("/auth/") || path.startsWith("/api/")) {
+            chain.doFilter(request, response);
+            return;
+        }
 
         String authHeader = request.getHeader("Authorization");
 
@@ -44,6 +52,9 @@ public class JwtFilter extends OncePerRequestFilter {
 
             if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+
+                // You might want to validate the token here (e.g. jwtUtils.validateToken(token, userDetails))
+                // before setting authentication to avoid accepting invalid tokens.
 
                 UsernamePasswordAuthenticationToken auth =
                     new UsernamePasswordAuthenticationToken(userDetails, null, Collections.emptyList());
