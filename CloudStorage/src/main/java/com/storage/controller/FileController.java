@@ -25,6 +25,8 @@ import com.storage.entity.StoredFile;
 import com.storage.repository.StoredFileRepository;
 import com.storage.service.StoredFileService;
 
+import jakarta.transaction.Transactional;
+
 @RestController
 @RequestMapping("/api")
 public class FileController {

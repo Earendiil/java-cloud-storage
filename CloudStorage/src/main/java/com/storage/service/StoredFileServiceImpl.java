@@ -14,8 +14,11 @@ import com.storage.dto.StoredFileDTO;
 import com.storage.entity.StoredFile;
 import com.storage.entity.User;
 import com.storage.exceptions.ResourceNotFoundException;
+import com.storage.repository.StoredFileInfo;
 import com.storage.repository.StoredFileRepository;
 import com.storage.repository.UserRepository;
+
+import jakarta.transaction.Transactional;
 
 @Service
 public class StoredFileServiceImpl implements StoredFileService{
@@ -56,11 +59,12 @@ public class StoredFileServiceImpl implements StoredFileService{
 	}
 
 	@Override
+	@Transactional
 	public List<StoredFileDTO> getAllFiles(Long userId) {
 	    User user = userRepository.findById(userId)
 	        .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
-	    List<StoredFile> files = fileRepository.findAllByOwner(user);
+	    List<StoredFileInfo> files = fileRepository.findAllFileInfoByOwner(user);
 
 	    return files.stream()
 	        .map(file -> new StoredFileDTO(
@@ -75,7 +79,7 @@ public class StoredFileServiceImpl implements StoredFileService{
 
 	@Override
 	public void removeFile(Long userId, UUID fileId) {
-		// can swap to retrieving the user from authantication w/o passing the userId
+		// can swap to retrieving the user from authentication w/o passing the userId
 	
 	 StoredFile file = fileRepository.findById(fileId)
 			 .orElseThrow(() -> new ResourceNotFoundException("File not found"));
