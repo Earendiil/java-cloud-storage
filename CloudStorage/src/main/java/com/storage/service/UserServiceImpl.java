@@ -61,20 +61,15 @@ public class UserServiceImpl implements UserService {
 		if (!changePasswordRequest.getNewPassword().equals(changePasswordRequest.getConfirmPassword())) {
 			throw new PasswordMismatchException("Passwords do not match");
 		}
-		
 		user.setPassword(passwordEncoder.encode(changePasswordRequest.getNewPassword()));
 	    userRepository.save(user);
-
-	   
 	}
-
 
 	@Override
 	public void removeUser(Long userId) {
-		if (!userRepository.existsById(userId)) {
-			throw new ResourceNotFoundException("User doesn't exist!");
-		}
-		userRepository.deleteById(userId);
+		User user = userRepository.findById(userId)
+		        .orElseThrow(() -> new ResourceNotFoundException("User doesn't exist!"));
+		    userRepository.delete(user);
 	}
 
 }
