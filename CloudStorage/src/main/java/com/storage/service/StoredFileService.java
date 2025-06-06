@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import com.storage.dto.ExpiryDateUpdateRequest;
 import com.storage.dto.StoredFileDTO;
 import com.storage.entity.StoredFile;
 
@@ -18,5 +19,7 @@ public interface StoredFileService {
 	void removeFile(Long userId, UUID fileId);
 
 	StoredFile getFileById(UUID fileId);
+
+	void updateExpiryDate(UUID fileId, ExpiryDateUpdateRequest request);
 
 }

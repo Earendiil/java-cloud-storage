@@ -11,6 +11,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.storage.dto.ExpiryDateUpdateRequest;
 import com.storage.dto.StoredFileDTO;
 import com.storage.entity.StoredFile;
 import com.storage.entity.User;
@@ -97,6 +98,19 @@ public class StoredFileServiceImpl implements StoredFileService{
 	public StoredFile getFileById(UUID fileId) {
 		return fileRepository.findById(fileId).orElseThrow(()-> new ResourceNotFoundException("file not found"));
 		
+	}
+
+	@Override
+	@Transactional
+	public void updateExpiryDate(UUID fileId, ExpiryDateUpdateRequest request) {
+		StoredFile file = fileRepository.findById(fileId).orElseThrow(()-> new ResourceNotFoundException("File not found!"));
+		Instant maxExpiry = file.getUploadDate().plus(30, ChronoUnit.DAYS);
+		Instant expiryRequest = request.getExpiryDate();
+		if (expiryRequest.isAfter(maxExpiry)) {
+			throw new IllegalArgumentException("Expiry cannot be more than 30 days");
+		}
+		file.setExpiryDate(expiryRequest);
+		fileRepository.save(file);
 	}
 
 
