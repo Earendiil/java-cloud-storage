@@ -2,6 +2,7 @@ package com.storage.service;
 
 import java.io.IOException;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -44,6 +45,7 @@ public class StoredFileServiceImpl implements StoredFileService{
         storedFile.setUploadDate(Instant.now());
         storedFile.setData(file.getBytes());
         storedFile.setOwner(user);
+        storedFile.setExpiryDate(Instant.now().plus(30,ChronoUnit.DAYS));
         
         fileRepository.save(storedFile);
 		
@@ -72,7 +74,8 @@ public class StoredFileServiceImpl implements StoredFileService{
 	            file.getFileName(),
 	            file.getContentType(),
 	            file.getSize(),
-	            file.getUploadDate()
+	            file.getUploadDate(), 
+	            file.getExpiryDate()
 	        ))
 	        .collect(Collectors.toList());
 	}

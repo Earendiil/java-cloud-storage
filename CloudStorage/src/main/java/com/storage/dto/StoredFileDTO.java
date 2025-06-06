@@ -17,6 +17,7 @@ public class StoredFileDTO {
     private String contentType;
     private Long size;
     private Instant uploadDate;
+    private Instant expiryDate;
 
    
 //    private byte[] data;   

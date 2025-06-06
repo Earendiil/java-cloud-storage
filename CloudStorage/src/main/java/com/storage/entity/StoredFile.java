@@ -3,9 +3,9 @@ package com.storage.entity;
 import java.time.Instant;
 import java.util.UUID;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Basic;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -34,6 +34,8 @@ public class StoredFile {
 	    private String contentType;
 	    private Long size;
 	    private Instant uploadDate;
+	    @Column(name = "expiry_date")
+	    private Instant expiryDate;
 
 	    @Lob
 	    @Basic(fetch = FetchType.LAZY)     // Optimize performance for large files

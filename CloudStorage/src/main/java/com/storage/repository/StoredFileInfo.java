@@ -9,4 +9,5 @@ public interface StoredFileInfo {
     String getContentType();
     Long getSize();
     Instant getUploadDate();
+    Instant getExpiryDate();
 }
