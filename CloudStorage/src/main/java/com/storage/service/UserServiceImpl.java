@@ -33,6 +33,9 @@ public class UserServiceImpl implements UserService {
 	    if (userRepository.existsByEmail(signupRequest.getEmail())) {
 	        throw new IllegalArgumentException("Email already exists");
 	    }
+	    if (userRepository.existsByUsername(signupRequest.getUsername())) {
+			throw new IllegalArgumentException("Username already exists!");
+		}
 	    if (!signupRequest.getPassword().equals(signupRequest.getConfirmPassword())) {
 	    	throw new PasswordMismatchException("Passwords do not match");
 	    }
