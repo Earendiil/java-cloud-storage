@@ -2,6 +2,7 @@ package com.storage.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,9 +15,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.storage.dto.ChangePasswordRequest;
 import com.storage.dto.SignupRequest;
 import com.storage.dto.UserDTO;
+import com.storage.security.services.CustomUserDetails;
 import com.storage.service.UserService;
 
 import jakarta.validation.Valid;
+
 
 @RestController
 @RequestMapping("/api")
@@ -50,11 +53,14 @@ public class UserController {
 		return new ResponseEntity<String>("Password updated!", HttpStatus.OK);
 	}
 	
-	@DeleteMapping("delete/{userId}")
-	private ResponseEntity<String> deleteUser (@PathVariable Long userId){
-		userService.removeUser(userId);
-		return new ResponseEntity<String>("User deleted!", HttpStatus.OK);
+	@DeleteMapping("/delete")
+	public ResponseEntity<String> deleteCurrentUser(Authentication authentication) {
+	    CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+	    Long userId = userDetails.getUserId();
+
+	    userService.removeUser(userId);
+	    return ResponseEntity.ok("User deleted!");
 	}
-	
+
 	
 }

@@ -1,7 +1,6 @@
 package com.storage.service;
 
 import org.modelmapper.ModelMapper;
-import org.springframework.boot.context.config.ConfigDataResourceNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -71,5 +70,8 @@ public class UserServiceImpl implements UserService {
 		        .orElseThrow(() -> new ResourceNotFoundException("User doesn't exist!"));
 		    userRepository.delete(user);
 	}
+
+
+	
 
 }

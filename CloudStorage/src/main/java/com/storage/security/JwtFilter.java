@@ -10,6 +10,8 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.storage.security.services.CustomUserDetailsService;
+
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -38,8 +40,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
         String path = request.getServletPath();
 
-        // Skip JWT filter for public endpoints like /auth/** or /api/** if you want those public
-        if (path.startsWith("/auth/") || path.startsWith("/api/")) {
+        if (path.startsWith("/api/auth/")) {
             chain.doFilter(request, response);
             return;
         }

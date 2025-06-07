@@ -1,6 +1,4 @@
-package com.storage.security;
-
-import java.util.Collections;
+package com.storage.security.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,7 +19,6 @@ public class CustomUserDetailsService implements UserDetailsService {
             ? userRepository.findByEmail(input).orElseThrow(() -> new UsernameNotFoundException("Email not found"))
             : userRepository.findByUsername(input).orElseThrow(() -> new UsernameNotFoundException("Username not found"));
 
-        return new org.springframework.security.core.userdetails.User(
-            user.getUsername(), user.getPassword(), Collections.emptyList());
+        return new CustomUserDetails(user.getUserId(), user.getUsername(), user.getPassword());
     }
 }

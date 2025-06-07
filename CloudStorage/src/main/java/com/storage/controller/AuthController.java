@@ -14,8 +14,8 @@ import com.storage.dto.LoginRequest;
 import com.storage.dto.LoginResponse;
 import com.storage.entity.User;
 import com.storage.repository.UserRepository;
-import com.storage.security.CustomUserDetailsService;
 import com.storage.security.JwtUtils;
+import com.storage.security.services.CustomUserDetailsService;
 
 @RestController
 @RequestMapping("/api/auth/")
