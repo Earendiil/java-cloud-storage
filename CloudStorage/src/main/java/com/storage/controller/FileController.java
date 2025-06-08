@@ -1,14 +1,15 @@
 package com.storage.controller;
 
 import java.io.IOException;
+
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.http.HttpStatus;
@@ -24,10 +25,9 @@ import org.springframework.web.multipart.MultipartFile;
 import com.storage.dto.ExpiryDateUpdateRequest;
 import com.storage.dto.StoredFileDTO;
 import com.storage.entity.StoredFile;
-import com.storage.repository.StoredFileRepository;
+import com.storage.security.services.CustomUserDetails;
 import com.storage.service.StoredFileService;
 
-import jakarta.transaction.Transactional;
 
 @RestController
 @RequestMapping("/api")
@@ -35,10 +35,10 @@ public class FileController {
 	
 	private final StoredFileService fileService;
 	
-	
 	public FileController(StoredFileService fileService) {
 		super();
 		this.fileService = fileService;
+		
 	}
 
 	@PostMapping("upload/{userId}")
@@ -82,6 +82,12 @@ public class FileController {
 		return new ResponseEntity<String>("Expiry date updated!", HttpStatus.OK);
 	}
 	
-	
+	@GetMapping("/files/total-size")
+	public ResponseEntity<Long> getTotalFileSize(Authentication authentication) {
+	    CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+	    Long userId = userDetails.getUserId();
+	    Long totalSize = fileService.getTotalFileSizeByUserId(userId);
+	    return ResponseEntity.ok(totalSize);
+	}
 	
 }

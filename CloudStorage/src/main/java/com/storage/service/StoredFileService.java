@@ -22,4 +22,10 @@ public interface StoredFileService {
 
 	void updateExpiryDate(UUID fileId, ExpiryDateUpdateRequest request);
 
+	Long getTotalFileSizeByUserId(Long userId);
+
+
+
+	
+	
 }

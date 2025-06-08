@@ -20,6 +20,8 @@ public interface StoredFileRepository extends JpaRepository<StoredFile, UUID> {
 	List<StoredFile> findAllByExpiryDateBefore(Instant now);
 
 
+	@Query("SELECT COALESCE(SUM(f.size), 0) FROM StoredFile f WHERE f.owner.userId = :userId")
+	Long getTotalFileSizeByUserId(@Param("userId") Long userId);
 
 
 }

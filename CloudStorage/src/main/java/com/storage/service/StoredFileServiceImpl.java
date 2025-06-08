@@ -11,11 +11,13 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.storage.config.StoragePlan;
 import com.storage.dto.ExpiryDateUpdateRequest;
 import com.storage.dto.StoredFileDTO;
 import com.storage.entity.StoredFile;
 import com.storage.entity.User;
 import com.storage.exceptions.ResourceNotFoundException;
+import com.storage.exceptions.StorageLimitExceededException;
 import com.storage.repository.StoredFileInfo;
 import com.storage.repository.StoredFileRepository;
 import com.storage.repository.UserRepository;
@@ -33,11 +35,20 @@ public class StoredFileServiceImpl implements StoredFileService{
 		this.fileRepository = fileRepository;
 		this.userRepository = userRepository;
 	}
+	
+
 
 	@Override
 	public void addFile(MultipartFile file, Long userId) throws IOException {
 		User user =userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User not found"));
-	
+		 Long totalUsed = fileRepository.getTotalFileSizeByUserId(user.getUserId());
+		 Long fileSize = file.getSize();
+		 Long maxAllowed = StoragePlan.BASIC.getMaxBytes(); // or user.getStoragePlan().getMaxBytes()
+
+	    if (totalUsed + fileSize > maxAllowed) {
+	        throw new StorageLimitExceededException("You have exceeded your 50MB storage limit.");
+	    }
+			
 		StoredFile storedFile = new StoredFile();
 		storedFile.setFileName(file.getOriginalFilename());
         storedFile.setStoredFileName(generateUniqueFilename(file.getOriginalFilename()));
@@ -51,6 +62,8 @@ public class StoredFileServiceImpl implements StoredFileService{
         fileRepository.save(storedFile);
 		
 	}
+	
+
 	// method to create a unique name for the file
 	private String generateUniqueFilename(String originalFilename) {
 		String extension = "";
@@ -112,6 +125,16 @@ public class StoredFileServiceImpl implements StoredFileService{
 		file.setExpiryDate(expiryRequest);
 		fileRepository.save(file);
 	}
+
+
+	@Override
+	public Long getTotalFileSizeByUserId(Long userId) {
+		return fileRepository.getTotalFileSizeByUserId(userId);
+		
+	}
+
+
+	
 
 
 

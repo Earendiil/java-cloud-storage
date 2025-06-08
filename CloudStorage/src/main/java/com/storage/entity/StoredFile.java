@@ -25,7 +25,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class StoredFile {
 
-	 @Id
+		@Id
 	    @GeneratedValue
 	    private UUID fileId;
 
