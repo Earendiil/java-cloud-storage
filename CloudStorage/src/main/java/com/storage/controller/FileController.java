@@ -1,7 +1,5 @@
 package com.storage.controller;
 
-import java.io.IOException;
-
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -27,6 +25,7 @@ import com.storage.dto.StoredFileDTO;
 import com.storage.entity.StoredFile;
 import com.storage.security.services.CustomUserDetails;
 import com.storage.service.StoredFileService;
+import com.storage.util.FileEncryptionUtil;
 
 
 @RestController
@@ -34,17 +33,18 @@ import com.storage.service.StoredFileService;
 public class FileController {
 	
 	private final StoredFileService fileService;
+	private final FileEncryptionUtil fileEncryptionUtil;
 	
-	public FileController(StoredFileService fileService) {
+	public FileController(StoredFileService fileService, FileEncryptionUtil fileEncryptionUtil) {
 		super();
 		this.fileService = fileService;
-		
+		this.fileEncryptionUtil = fileEncryptionUtil;
 	}
 
 	@PostMapping("upload/{userId}")
 	public ResponseEntity<String> uploadFile(
 						@PathVariable Long userId,
-						@RequestParam("file") MultipartFile file) throws IOException {
+						@RequestParam("file") MultipartFile file) throws Exception {
 		fileService.addFile(file, userId);
 	    return ResponseEntity.ok("File uploaded successfully");
 	}
@@ -68,11 +68,18 @@ public class FileController {
 	@GetMapping("download/{fileId}")
 	public ResponseEntity<Resource> downloadFile(@PathVariable UUID fileId) {
 	    StoredFile file = fileService.getFileById(fileId);
-	    
+
+	    byte[] decrypted;
+	    try {
+	        decrypted = fileEncryptionUtil.decrypt(file.getData());
+	    } catch (Exception e) {
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+	    }
+
 	    return ResponseEntity.ok()
 	        .contentType(MediaType.parseMediaType(file.getContentType()))
 	        .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFileName() + "\"")
-	        .body(new ByteArrayResource(file.getData()));
+	        .body(new ByteArrayResource(decrypted));
 	}
 
 	@PutMapping("/files/{fileId}/expiry")

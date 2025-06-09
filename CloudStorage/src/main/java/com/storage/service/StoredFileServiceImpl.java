@@ -1,6 +1,5 @@
 package com.storage.service;
 
-import java.io.IOException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -21,6 +20,7 @@ import com.storage.exceptions.StorageLimitExceededException;
 import com.storage.repository.StoredFileInfo;
 import com.storage.repository.StoredFileRepository;
 import com.storage.repository.UserRepository;
+import com.storage.util.FileEncryptionUtil;
 
 import jakarta.transaction.Transactional;
 
@@ -29,39 +29,50 @@ public class StoredFileServiceImpl implements StoredFileService{
 	
 	private final StoredFileRepository fileRepository;
 	private final UserRepository userRepository;
+	private final FileEncryptionUtil fileEncryptionUtil;
 
-	public StoredFileServiceImpl(StoredFileRepository fileRepository, UserRepository userRepository) {
+	public StoredFileServiceImpl(StoredFileRepository fileRepository, FileEncryptionUtil fileEncryptionUtil, UserRepository userRepository) {
 		super();
 		this.fileRepository = fileRepository;
 		this.userRepository = userRepository;
+		this.fileEncryptionUtil = fileEncryptionUtil;
 	}
 	
 
 
 	@Override
-	public void addFile(MultipartFile file, Long userId) throws IOException {
-		User user =userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User not found"));
-		 Long totalUsed = fileRepository.getTotalFileSizeByUserId(user.getUserId());
-		 Long fileSize = file.getSize();
-		 Long maxAllowed = StoragePlan.BASIC.getMaxBytes(); // or user.getStoragePlan().getMaxBytes()
+	public void addFile(MultipartFile file, Long userId) throws Exception {
+	    User user = userRepository.findById(userId)
+	        .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+	    Long totalUsed = fileRepository.getTotalFileSizeByUserId(user.getUserId());
+	    Long fileSize = file.getSize();
+	    Long maxAllowed = StoragePlan.BASIC.getMaxBytes(); // or user.getStoragePlan().getMaxBytes()
 
 	    if (totalUsed + fileSize > maxAllowed) {
 	        throw new StorageLimitExceededException("You have exceeded your 50MB storage limit.");
 	    }
-			
-		StoredFile storedFile = new StoredFile();
-		storedFile.setFileName(file.getOriginalFilename());
-        storedFile.setStoredFileName(generateUniqueFilename(file.getOriginalFilename()));
-        storedFile.setContentType(file.getContentType());
-        storedFile.setSize(file.getSize());
-        storedFile.setUploadDate(Instant.now());
-        storedFile.setData(file.getBytes());
-        storedFile.setOwner(user);
-        storedFile.setExpiryDate(Instant.now().plus(30,ChronoUnit.DAYS));
-        
-        fileRepository.save(storedFile);
-		
+
+	    byte[] originalData = file.getBytes();
+	    byte[] encryptedData = fileEncryptionUtil.encrypt(originalData);  // instance call
+
+//	    System.out.println("Original: " + new String(originalData));
+//	    System.out.println("Encrypted (Base64): " + Base64.getEncoder().encodeToString(encryptedData));
+//	    System.out.println("Decrypted: " + new String(FileEncryptionUtil.decrypt(encryptedData)));
+
+	    StoredFile storedFile = new StoredFile();
+	    storedFile.setFileName(file.getOriginalFilename());
+	    storedFile.setStoredFileName(generateUniqueFilename(file.getOriginalFilename()));
+	    storedFile.setContentType(file.getContentType());
+	    storedFile.setSize((long) encryptedData.length); // size of encrypted data
+	    storedFile.setUploadDate(Instant.now());
+	    storedFile.setData(encryptedData);
+	    storedFile.setOwner(user);
+	    storedFile.setExpiryDate(Instant.now().plus(30, ChronoUnit.DAYS));
+
+	    fileRepository.save(storedFile);
 	}
+
+
 	
 
 	// method to create a unique name for the file

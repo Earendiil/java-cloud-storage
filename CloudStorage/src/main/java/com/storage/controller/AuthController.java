@@ -23,16 +23,14 @@ public class AuthController {
 
     private final AuthenticationManager authManager;
     private final JwtUtils jwtUtils;
-    private final CustomUserDetailsService userDetailsService;
     private final UserRepository userRepository;
     
 
     public AuthController(AuthenticationManager authManager, JwtUtils jwtUtils,
-			CustomUserDetailsService userDetailsService,UserRepository userRepository) {
+			UserRepository userRepository) {
 		super();
 		this.authManager = authManager;
 		this.jwtUtils = jwtUtils;
-		this.userDetailsService = userDetailsService;
 		this.userRepository = userRepository;
 	}
 

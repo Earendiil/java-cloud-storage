@@ -12,7 +12,7 @@ import com.storage.entity.StoredFile;
 
 public interface StoredFileService {
 
-	void addFile(MultipartFile file, Long userId) throws IOException;
+	void addFile(MultipartFile file, Long userId) throws IOException, Exception;
 
 	List<StoredFileDTO> getAllFiles(Long userId);
 
