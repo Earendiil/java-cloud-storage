@@ -1,0 +1,31 @@
+# Ignore Maven target build folder except the JAR you need
+target/*.jar
+!target/CloudStorage-0.0.1-SNAPSHOT.jar
+
+# Ignore all other build output files
+target/classes/
+target/generated-sources/
+target/maven-status/
+target/*.log
+target/*.properties
+
+# Ignore IDE files
+.idea/
+*.iml
+.vscode/
+
+# Ignore git and other version control files
+.git
+.gitignore
+
+# Ignore OS generated files
+.DS_Store
+Thumbs.db
+
+# Ignore logs and temp files
+*.log
+*.tmp
+
+# Ignore Docker files (optional)
+.dockerignore
+Dockerfile

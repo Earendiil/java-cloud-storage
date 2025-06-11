@@ -1,16 +1,16 @@
 package com.storage;
 
+import com.storage.util.FileEncryptionUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
-import com.storage.util.FileEncryptionUtil;
+import static org.junit.jupiter.api.Assertions.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-
-
+@SpringBootTest
 public class FileEncryptionUtilTest {
-	@Autowired
+
+    @Autowired
     private FileEncryptionUtil fileEncryptionUtil;
 
     @Test
