@@ -28,4 +28,4 @@ Thumbs.db
 
 # Ignore Docker files (optional)
 .dockerignore
-Dockerfile
+
