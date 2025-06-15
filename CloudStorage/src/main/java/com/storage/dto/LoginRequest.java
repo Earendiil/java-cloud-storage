@@ -10,7 +10,12 @@ import lombok.NoArgsConstructor;
 public class LoginRequest {
 
 	
-	    private String input;     // email or username
-	    private String password;
-	
+    private String input;     // email or username
+    private String password;
+
+    //this prevents the password from showing in the logs
+    @Override
+    public String toString() {
+        return "LoginRequest(input=" + input + ", password=****)";
+    }
 }
