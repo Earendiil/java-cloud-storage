@@ -1,0 +1,48 @@
+
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: mycloud-db
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - mycloud-net
+
+  backend:
+    build:
+      context: "C:/Users/teo/git/repository9/CloudStorage"
+    container_name: mycloud-backend
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB}
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
+    depends_on:
+      - postgres
+    ports:
+      - "8080:8080"
+    networks:
+      - mycloud-net
+
+  frontend:
+    build:
+      context: "C:/Users/teo/.Programming/React/cloud-storage"
+    container_name: mycloud-frontend
+    ports:
+      - "5173:5173"
+    environment:
+      - PORT=5173
+    networks:
+      - mycloud-net
+
+volumes:
+  pgdata:
+
+networks:
+  mycloud-net:
