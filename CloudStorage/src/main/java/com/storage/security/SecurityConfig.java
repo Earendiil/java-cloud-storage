@@ -59,10 +59,10 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowedOrigins(List.of(
-        		"http://localhost:8081", 
-                "http://localhost:8082",
-        		"http://localhost:5173", 
-        		"http://frontend:5174"));
+    		    "http://localhost:5302", //  Cloud Storage frontend
+    		    "http://localhost:5300", //  Homepage
+    		    "http://localhost:8081"  // backend origin (optional, not needed for CORS)
+                ));  
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);
