@@ -1,6 +1,9 @@
 package com.storage.controller;
 
 import org.springframework.core.io.ByteArrayResource;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -32,50 +35,56 @@ import com.storage.util.FileEncryptionUtil;
 @RequestMapping("/api")
 public class FileController {
 	
+	private static final Logger logger = LoggerFactory.getLogger(FileController.class);
+	
 	private final StoredFileService fileService;
 	private final FileEncryptionUtil fileEncryptionUtil;
 	
 	public FileController(StoredFileService fileService, FileEncryptionUtil fileEncryptionUtil) {
-		super();
 		this.fileService = fileService;
 		this.fileEncryptionUtil = fileEncryptionUtil;
 	}
 
 	@PostMapping("upload/{userId}")
-	public ResponseEntity<String> uploadFile(
-						@PathVariable Long userId,
-						@RequestParam("file") MultipartFile file) throws Exception {
+	public ResponseEntity<String> uploadFile(@PathVariable Long userId,
+											 @RequestParam("file") MultipartFile file) throws Exception {
+		logger.info("Received file upload request for userId={}, fileName={}", userId, file.getOriginalFilename());
 		fileService.addFile(file, userId);
+		logger.info("File uploaded successfully for userId={}, fileName={}", userId, file.getOriginalFilename());
 	    return ResponseEntity.ok("File uploaded successfully");
 	}
 	
-	
-	
 	@GetMapping("user/files/{userId}")
 	private ResponseEntity<List<StoredFileDTO>> getUserFiles(@PathVariable Long userId){
+		logger.info("Fetching files for userId={}", userId);
 		List<StoredFileDTO> files = fileService.getAllFiles(userId);
-		return new ResponseEntity<List<StoredFileDTO>>(files, HttpStatus.OK); 
+		logger.debug("Returned {} files for userId={}", files.size(), userId);
+		return new ResponseEntity<>(files, HttpStatus.OK); 
 	}
 	
 	@DeleteMapping("user/files/{userId}/{fileId}")
 	private ResponseEntity<String> deleteFile(@PathVariable Long userId,
 											  @PathVariable UUID fileId){
+		logger.info("Delete request: userId={}, fileId={}", userId, fileId);
 		fileService.removeFile(userId, fileId);
-										
-		return new ResponseEntity<String>("File deleted!", HttpStatus.OK);	
+		logger.info("File deleted: fileId={}", fileId);
+		return new ResponseEntity<>("File deleted!", HttpStatus.OK);	
 	}
 	
 	@GetMapping("download/{fileId}")
 	public ResponseEntity<Resource> downloadFile(@PathVariable UUID fileId) {
+	    logger.info("Download request for fileId={}", fileId);
 	    StoredFile file = fileService.getFileById(fileId);
 
 	    byte[] decrypted;
 	    try {
 	        decrypted = fileEncryptionUtil.decrypt(file.getData());
 	    } catch (Exception e) {
+	        logger.error("File decryption failed for fileId={}: {}", fileId, e.getMessage());
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
 	    }
 
+	    logger.info("File decrypted and ready for download: fileName={}", file.getFileName());
 	    return ResponseEntity.ok()
 	        .contentType(MediaType.parseMediaType(file.getContentType()))
 	        .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFileName() + "\"")
@@ -84,17 +93,19 @@ public class FileController {
 
 	@PutMapping("/files/{fileId}/expiry")
 	private ResponseEntity<String> updateExpiryDate(@PathVariable UUID fileId,
-											   @RequestBody ExpiryDateUpdateRequest request){
+													@RequestBody ExpiryDateUpdateRequest request){
+		logger.info("Updating expiry date for fileId={} to {}", fileId, request.getExpiryDate());
 		fileService.updateExpiryDate(fileId, request);
-		return new ResponseEntity<String>("Expiry date updated!", HttpStatus.OK);
+		return new ResponseEntity<>("Expiry date updated!", HttpStatus.OK);
 	}
 	
 	@GetMapping("/files/total-size")
 	public ResponseEntity<Long> getTotalFileSize(Authentication authentication) {
 	    CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
 	    Long userId = userDetails.getUserId();
+	    logger.info("Getting total file size for userId={}", userId);
 	    Long totalSize = fileService.getTotalFileSizeByUserId(userId);
+	    logger.debug("Total file size for userId={} is {} bytes", userId, totalSize);
 	    return ResponseEntity.ok(totalSize);
 	}
-	
 }
