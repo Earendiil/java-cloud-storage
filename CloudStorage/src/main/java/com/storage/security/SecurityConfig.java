@@ -60,9 +60,9 @@ public class SecurityConfig {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowedOrigins(List.of(
     		    "http://localhost:5302", //  Cloud Storage frontend
-    		    "http://localhost:5300", //  Homepage
-    		    "http://23.88.57.34:5300",  // homepage
-                "http://23.88.57.34:5302"
+                "http://23.88.57.34:5302",
+                "https://app1.flinkfiles.com",
+                "https://app2.flinkfiles.com"
         		));  
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
