@@ -61,8 +61,9 @@ public class SecurityConfig {
         config.setAllowedOrigins(List.of(
     		    "http://localhost:5302", //  Cloud Storage frontend
     		    "http://localhost:5300", //  Homepage
-    		    "http://localhost:8081"  // backend origin (optional, not needed for CORS)
-                ));  
+    		    "http://23.88.57.34:5300",  // homepage
+                "http://23.88.57.34:5302"
+        		));  
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);
