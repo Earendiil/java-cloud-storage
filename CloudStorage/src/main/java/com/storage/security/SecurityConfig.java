@@ -62,7 +62,8 @@ public class SecurityConfig {
     		    "http://localhost:5302", //  Cloud Storage frontend
                 "http://23.88.57.34:5302",
                 "https://app1.flinkfiles.com",
-                "https://app2.flinkfiles.com"
+                "https://app2.flinkfiles.com",
+                "https://cloudstorage-frontend-695682460373.a.run.app"
         		));  
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));

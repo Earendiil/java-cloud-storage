@@ -3,3 +3,4 @@
 2025-07-05 13:14:24 INFO  c.storage.controller.AuthController - User logged in successfully: username='kratos1', userId=2
 2025-07-05 16:06:28 INFO  c.storage.controller.AuthController - User logged in successfully: username='kratos', userId=1
 2025-07-05 16:07:08 INFO  c.storage.controller.AuthController - User logged in successfully: username='kratos11', userId=3
+2025-07-18 23:39:58 INFO  c.storage.controller.AuthController - User logged in successfully: username='kratos', userId=1
