@@ -35,6 +35,7 @@ build/
 # Ignore application properties files with sensitive info
 src/main/resources/application.properties
 src/main/resources/application-dev.properties
+logs/
 
 # Ignore environment variable files
 .env
